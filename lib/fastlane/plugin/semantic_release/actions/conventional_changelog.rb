@@ -72,9 +72,11 @@ module Fastlane
 
             result += "-"
 
-            unless commit[:scope].nil?
-              formatted_text = style_text("#{commit[:scope]}:", format, "bold").to_s
-              result += " #{formatted_text}"
+            if params[:display_scopes] == true
+              unless commit[:scopes].nil? || commit[:scopes].empty? 
+                formatted_text = style_text("#{commit[:scopes].join(", ")}:", format, "bold").to_s
+                result += " #{formatted_text}"
+              end
             end
 
             result += " #{commit[:subject]}"
@@ -186,7 +188,7 @@ module Fastlane
           )
 
           next if Helper::SemanticReleaseHelper.should_exclude_commit(
-            commit_scope: commit[:scope],
+            commit_scopes: commit[:scopes],
             include_scopes: params[:include_scopes],
             ignore_scopes: params[:ignore_scopes]
           )
@@ -275,6 +277,13 @@ module Fastlane
           FastlaneCore::ConfigItem.new(
             key: :display_links,
             description: "Whether you want to display the links to commit IDs",
+            default_value: true,
+            type: Boolean,
+            optional: true
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :display_scopes,
+            description: "Whether you want to display the scopes",
             default_value: true,
             type: Boolean,
             optional: true

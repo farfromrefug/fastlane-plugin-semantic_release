@@ -147,7 +147,7 @@ module Fastlane
           )
 
           next if Helper::SemanticReleaseHelper.should_exclude_commit(
-            commit_scope: commit[:scope],
+            commit_scopes: commit[:scopes],
             include_scopes: params[:include_scopes],
             ignore_scopes: params[:ignore_scopes]
           )

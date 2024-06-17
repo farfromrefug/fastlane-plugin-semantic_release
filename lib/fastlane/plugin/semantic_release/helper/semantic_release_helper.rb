@@ -21,16 +21,14 @@ module Fastlane
       end
 
       def self.should_exclude_commit(params)
-        commit_scope = params[:commit_scope]
+        commit_scopes = params[:commit_scopes]
         scopes_to_include = params[:include_scopes]
         scopes_to_ignore = params[:ignore_scopes]
-
-        unless scopes_to_include.empty?
-          return !scopes_to_include.include?(commit_scope)
-        end
-
-        unless commit_scope.nil?
-          return scopes_to_ignore.include?(commit_scope)
+        unless commit_scopes.nil? || commit_scopes.empty?
+          unless scopes_to_include.empty?
+            return (scopes_to_include & commit_scopes).empty?
+          end
+          return !(scopes_to_ignore & commit_scopes).empty?
         end
       end
 
@@ -53,11 +51,11 @@ module Fastlane
 
         unless matched.nil?
           type = matched[1]
-          scope = matched[2]
+          scopes = matched[2].nil? ? nil : matched[2].split(",")
 
           result[:is_valid] = true
           result[:type] = type
-          result[:scope] = scope
+          result[:scopes] = scopes
           result[:has_exclamation_mark] = matched[3] == '!'
           result[:subject] = matched[4]
 
