@@ -130,7 +130,7 @@ module Fastlane
         # Skips all styling
         case style
         when "title"
-          if format == "markdown"
+          if format == "markdown" || format == "github"
             "# #{text}"
           elsif format == "slack"
             "*#{text}*"
@@ -138,7 +138,7 @@ module Fastlane
             text
           end
         when "heading"
-          if format == "markdown"
+          if format == "markdown" || format == "github"
             "### #{text}"
           elsif format == "slack"
             "*#{text}*"
@@ -146,7 +146,7 @@ module Fastlane
             "#{text}:"
           end
         when "bold"
-          if format == "markdown"
+          if format == "markdown" || format == "github"
             "**#{text}**"
           elsif format == "slack"
             "*#{text}*"
@@ -167,6 +167,8 @@ module Fastlane
         case format
         when "slack"
           "<#{url}|#{short_hash}>"
+        when "github"
+          "#{url}"
         when "markdown"
           "[#{short_hash}](#{url})"
         else
